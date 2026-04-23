@@ -5,21 +5,41 @@ import socket from "../lib/socket";
 import ChatBox from "../components/ChatBox";
 import MessageInput from "../components/MessageInput";
 
+type Message = {
+  user: string;
+  message: string;
+};
+
 export default function Home() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
-    const name = prompt("Enter your name");
+    let name = localStorage.getItem("username");
+
+    if (!name) {
+      name = prompt("Enter your name") || "Anonymous";
+      localStorage.setItem("username", name);
+    }
+
+    setUsername(name);
+
+    socket.connect();
     socket.emit("join", name);
 
-    socket.on("receiveGlobalMessage", (data) => {
+    const handler = (data: Message) => {
       setMessages((prev) => [...prev, data]);
-    });
+    };
 
-    return () => socket.off();
+    socket.on("receiveGlobalMessage", handler);
+
+    return () => {
+      socket.off("receiveGlobalMessage", handler);
+      socket.disconnect();
+    };
   }, []);
 
-  const send = (msg) => {
+  const send = (msg: string) => {
     socket.emit("sendGlobalMessage", msg);
   };
 

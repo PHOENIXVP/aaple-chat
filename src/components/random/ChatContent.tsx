@@ -30,7 +30,7 @@ import MatchScreen from "@/components/random/MatchScreen";
 export default function ChatPage() {
   useSocket();
 
-  const { onlineCount } = useSelector((state: RootState) => state.chat);
+  // const { onlineCount } = useSelector((state: RootState) => state.chat);
 
   const dispatch = useDispatch();
 

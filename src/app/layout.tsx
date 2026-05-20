@@ -3,9 +3,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 import { defaultMetadata } from "@/seo/metadata";
+import Providers from "./providers";
 
-export const metadata: Metadata =
-  defaultMetadata;
+export const metadata: Metadata = defaultMetadata;
 
 export default function RootLayout({
   children,
@@ -14,7 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
